@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Visualization</title>
+    <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <style>
+        /*
+        1.input should be disappear.
+        2.style should be in the center.
+        */
+        /*.axis text { display: none; }*/
+        #firstCommit {
+            position: relative;
+            left: 400px;
+        }
+        #showGraph {
+            top : 100px;
+            left : 30%;
+            width: 500px;
+            height: 300px;
+            position: relative;
+
+        }
+        #showInstruction {
+            position:relative;
+            top:100px;
+            left : 30%;
+            width:500px;
+            text-align:center;
+
+        }
+
+        #first {
+            align:right;
+        }
+        .axis line {
+            fill: none;
+            stroke: grey;
+            stroke-width: 1;
+        }
+
+        form {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        .node {
+            border: solid 1px black;
+            line-height: 0.95;
+            overflow: hidden;
+            position: absolute;
+
+        }
+
+        .circle_pos {
+            position:relative;
+            fill:black;
+        }
+
+
+
+
+
+
+    </style>
+    <script>
+
+
+        var name = "";
+        var Result = {};
+        trials = 0;
+        Result.totalInput_bar =[];
+        Result.realResult_bar =[];
+        Result.totalInput_bubble =[];
+        Result.realResult_bubble =[];
+        Result.totalInput_tree =[];
+        Result.realResult_tree =[];
+
+        var margin = {top : 20, right:20, bottom:20, left :40},
+                width = 500 - margin.left - margin.right,
+                height = 300 - margin.top - margin.bottom;
+
+        function judgeTimes() {
+            var input = $('#inputValue').val();
+            /*if (input > 100 || input < 0) {
+                return false;
+            }
+            var re = /^-?\d\d*$/;
+            if (!re.test(input) && !(trials == 0 && input == "")){
+                return false;
+            }*/
+            if (trials != 0) {
+                console.log(name);
+                Result[name].push(input);
+            }
+            //Result.name == null? null :
+
+            if (trials >= 12) {
+                $('#showGraph').empty();
+                $('#showGraph').append("<p>Thank you for helping our experiments</p>")
+                        .append("<p> The response you put for bar chart [" + Result.totalInput_bar + "]</p>")
+                        .append("<p> The actual result for bar chart [" + Result.realResult_bar +"]</p>")
+                        .append("<p> The response you put for bubble chart [" + Result.totalInput_bubble + "]</p>")
+                        .append("<p> The actual result for bubble chart [" + Result.realResult_bubble +"]</p>")
+                        .append("<p> The response you put for tree map [" + Result.totalInput_tree + "]</p>")
+                        .append("<p> The actual result for tree map [" + Result.realResult_tree +"]</p>");
+                $('#showInstruction').empty();
+
+            }
+            else {
+                random();
+            }
+        }
+
+        function random() {
+            var data = [];
+            for (var i = 0; i < 10; i++) {
+                data[i] = Math.ceil(Math.random() * 100);
+            }
+            var type = Math.ceil(Math.random() * 3);
+            trials++;
+            if (type === 1) {
+                showsBars(data);
+            } else if (type === 2) {
+                showsBubble(data);
+            } else if (type === 3) {
+                showsTreeMap(data);
+            }
+
+        }
+
+        function showsBars(data){
+            $("#showGraph").empty();
+            var svg = d3.select("#showGraph").append("svg").attr("width", 500).attr("height", 300);
+            var g = svg.append("g");
+            var x = d3.scale.ordinal().rangeRoundBands([0, width],.3);
+            var y = d3.scale.linear().range([height, 0]);
+            x.domain(d3.range(data.length));
+            y.domain([0, d3.max(data)]);
+            var pointX1 = Math.floor(Math.random() * 10);
+            var pointX2 = Math.floor(Math.random() * 10);
+            while (pointX2 === pointX1) {
+                pointX2 = Math.ceil(Math.random() * data.length);
+            }
+            var pointY = height - 5;
+            var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom");
+            svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(" + 0 + "," + height + ")")
+                    .style("stroke-width", "1px")
+                    .call(xAxis);
+            g.selectAll("bar")
+                    .data(data)
+                    .enter()
+                    .append("rect")
+                    .style("fill", "white")
+                    .style("stroke", "black")
+                    .attr("x", function(d,i){return x(i)})
+                    .attr("y", function(d){ return y(d)})
+                    .attr("width", x.rangeBand())
+                    .attr("height", function(d){return height - y(d)});
+            g.append("circle")
+                    .attr("r", 3)
+                    .attr("cx", x(pointX1) + x.rangeBand() / 2)
+                    .attr("cy", pointY)
+                    .style("fill","black");
+            g.append("circle")
+                    .attr("r", 3)
+                    .attr("cx", x(pointX2) + x.rangeBand() / 2)
+                    .attr("cy", pointY)
+                    .style("fill","black");
+
+            name = "totalInput_bar";
+            //totalInput_bar[trials_bar] = input;
+            Result.realResult_bar.push(Math.round(Math.min(data[pointX1],data[pointX2]) / Math.max(data[pointX1], data[pointX2]) * 100));
+        }
+        function showsBubble(data) {
+            $("#showGraph").empty();
+            var bubble = d3.layout.pack()
+                    .sort(null)
+                    .size([width, height])
+                    .value(function(d){return d.size})
+                    .padding(1.5);
+            var svg = d3.select("#showGraph")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("class", "bubble");
+            var bubbleData = transformDataFormat(data);
+            var nodes = bubble.nodes(bubbleData).filter(function(d) { return !d.children; });
+            var node = svg.selectAll(".node")
+                    .data(nodes)
+                    .enter().append("g")
+                    .attr("class", "node_circle")
+                    .attr("transform", function(d) { return "translate(" + d.x + "," +d.y + ")"; });
+            var point1 = Math.floor(Math.random() * 10);
+            var point2 = Math.floor(Math.random() * 10);
+            while (point2 === point1) {
+                point2 = Math.ceil(Math.random() * data.length);
+            }
+            node.append("circle")
+                    .attr("r", function(d) { return d.r; })
+                    .style("fill", "white")
+                    .style("stroke", "black");
+            node.append("circle")
+                    .attr("class", "circle_pos")
+                    .attr("r", function(d){return d.name == point1 || d.name == point2 ? 3 : 0})
+                    .attr("cx",0)
+                    .attr("cy", 0);
+
+            name = "totalInput_bubble";
+            //totalInput_bubble[trials_bubble] = input;
+            Result.realResult_bubble.push(Math.round(Math.min(data[point1],data[point2]) / Math.max(data[point1], data[point2]) * 100));
+        }
+        function transformDataFormat(data) {
+            var treeData = {}
+            treeData.name = "tree";
+            treeData.children = [];
+            for (var i = 0; i < data.length; i++) {
+                var inChildren = {};
+                inChildren.name = i + "";
+                inChildren.size = data[i];
+                treeData.children.push(inChildren);
+            }
+            return treeData;
+
+        }
+        function showsTreeMap(data) {
+            $("#showGraph").empty();
+            var treeData = transformDataFormat(data);
+            var point1 = Math.floor(Math.random() * 10);
+            var point2 = Math.floor(Math.random() * 10);
+            while (point2 === point1) {
+                point2 = Math.ceil(Math.random() * data.length);
+            }
+            var div = d3.select("#showGraph")
+                    .append("div")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .style("position", "relative");
+
+            var treemap = d3.layout.treemap()
+                    .size([width , height])
+                    .sticky(true)
+                    .value(function(d) { return d.size; });
+            var node = div.datum(treeData).selectAll(".node")
+                    .data(treemap.nodes)
+                    .enter().append("div")
+                    .attr("class", "node")
+                    .call(position)
+                    .append("svg")
+                    .append("circle")
+                    .attr("r", function(d){ return d.name == point1 || d.name == point2 ? 3 : 0})
+                    .attr("cx", function(d){ return Math.max(0, d.dx - 1) / 2;})
+                    .attr("cy", function(d){return Math.max(0, d.dy -1) / 2;});
+
+            name = "totalInput_tree";
+            //totalInput_tree[trials_tree] = input;
+            Result.realResult_tree.push(Math.round(Math.min(data[point1],data[point2]) / Math.max(data[point1], data[point2]) * 100));
+        }
+        function position() {
+            this.style("left", function(d) { return d.x + "px"; })
+                    .style("top", function(d) { return d.y + "px"; })
+                    .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
+                    .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
+        }
+        function handleChange() {
+            $('#inputValue').val('');
+            $('#inputValue').focus();
+        }
+
+        function remove(){
+            $('#showGraph').empty();
+        }
+        function addInstruction() {
+            $("#showInstruction").append("<p>Two values are marked with dots.</p>")
+                    .append("<p>What do you think the percent of the smaller value to the larger value?</p>")
+                    .append("<p>Please put your answer below.</p>")
+                    .append("<p>e.g If you think the smaller one is exactly a half of the bigger one, please input \"50\"</p>")
+                    .append("<input id = 'inputValue' autofocus>")
+                    .append("<button id='next' onclick='judgeTimes(); handleChange()'>Next</button>")
+        }
+
+    </script>
+</head>
+<body>
+    <div id ="showGraph">
+        <p>The experiment contains 12 questions to answer. It will spend about 3 minutes to finished. Ready?</p>
+        <button id = "firstCommit" onclick = "remove();addInstruction(); judgeTimes()">START</button>
+    </div>
+    <div id = "showInstruction"></div>
+
+</body>
+</html>
