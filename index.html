@@ -174,6 +174,7 @@
             name = "totalInput_bar";
             //totalInput_bar[trials_bar] = input;
             console.log(pointX1 + ", " + pointX2);
+            console.log(data[pointX1] + ", " + data[pointX2]);
             Result.realResult_bar.push(Math.round(Math.min(data[pointX1],data[pointX2]) / Math.max(data[pointX1], data[pointX2]) * 100));
         }
         function showsBubble(data) {
@@ -213,6 +214,7 @@
             name = "totalInput_bubble";
             //totalInput_bubble[trials_bubble] = input;
             console.log(point1 + ", " + point2);
+            console.log(data[point1] + ", " + data[point2]);
             Result.realResult_bubble.push(Math.round(Math.min(data[point1],data[point2]) / Math.max(data[point1], data[point2]) * 100));
         }
         function transformDataFormat(data) {
@@ -260,6 +262,7 @@
             name = "totalInput_tree";
             //totalInput_tree[trials_tree] = input;
             console.log(point1 + ", " + point2);
+            console.log(data[point1] + ", " + data[point2]);
             Result.realResult_tree.push(Math.round(Math.min(data[point1],data[point2]) / Math.max(data[point1], data[point2]) * 100));
         }
         function position() {
