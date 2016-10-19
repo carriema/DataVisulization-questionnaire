@@ -61,11 +61,6 @@
             fill:black;
         }
 
-
-
-
-
-
     </style>
     <script>
 
@@ -178,6 +173,7 @@
 
             name = "totalInput_bar";
             //totalInput_bar[trials_bar] = input;
+            console.log(pointX1 + ", " + pointX2);
             Result.realResult_bar.push(Math.round(Math.min(data[pointX1],data[pointX2]) / Math.max(data[pointX1], data[pointX2]) * 100));
         }
         function showsBubble(data) {
@@ -185,7 +181,7 @@
             var bubble = d3.layout.pack()
                     .sort(null)
                     .size([width, height])
-                    .value(function(d){return d.size})
+                    .value(function(d){return Math.sqrt(d.size)})
                     .padding(1.5);
             var svg = d3.select("#showGraph")
                     .append("svg")
@@ -216,6 +212,7 @@
 
             name = "totalInput_bubble";
             //totalInput_bubble[trials_bubble] = input;
+            console.log(pointX1 + ", " + pointX2);
             Result.realResult_bubble.push(Math.round(Math.min(data[point1],data[point2]) / Math.max(data[point1], data[point2]) * 100));
         }
         function transformDataFormat(data) {
@@ -262,6 +259,7 @@
 
             name = "totalInput_tree";
             //totalInput_tree[trials_tree] = input;
+            console.log(pointX1 + ", " + pointX2);
             Result.realResult_tree.push(Math.round(Math.min(data[point1],data[point2]) / Math.max(data[point1], data[point2]) * 100));
         }
         function position() {
