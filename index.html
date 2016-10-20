@@ -104,6 +104,12 @@
                         .append("<p> The response you put for tree map [" + Result.totalInput_tree + "]</p>")
                         .append("<p> The actual result for tree map [" + Result.realResult_tree +"]</p>");
                 $('#showInstruction').empty();
+                var mailContent =  "The response you put for bar chart [" + Result.totalInput_bar + "]" + "<p> The actual result for bar chart [" + Result.realResult_bar +"]</p>"
+                +"<p> The response you put for bubble chart [" + Result.totalInput_bubble + "]</p>"+"<p> The actual result for bubble chart [" + Result.realResult_bubble +"]</p>"+
+                        "<p> The response you put for tree map [" + Result.totalInput_tree + "]</p>" +  "<p> The actual result for tree map [" + Result.realResult_tree +"]</p>";
+                var mail="mailto:carriema1013@gmail.com?subject='Test Experiment' &body="+ mailContent;
+
+                $(this).attr('href', mail)
 
             }
             else {
