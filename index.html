@@ -67,19 +67,15 @@
 
         var Result = {};
         var userName = "";
-        Result.totalInput_bar =[];
+        /*Result.totalInput_bar =[];
         Result.realResult_bar =[];
         Result.totalInput_bubble =[];
         Result.realResult_bubble =[];
         Result.totalInput_tree =[];
-        Result.realResult_tree =[];
+        Result.realResult_tree =[];*/
         var final_res = [];
 
         var trials = 0;
-
-
-
-
         var margin = {top : 20, right:20, bottom:20, left :40},
                 width = 500 - margin.left - margin.right,
                 height = 300 - margin.top - margin.bottom;
@@ -95,15 +91,11 @@
 
             if (trials >12) {
                 $('#showGraph').empty();
-                $('#shoeGraph').append("<th><td>"+ "UserId"+"</td><td>" + "Trial Number"+"</td><td>"+"Visual Type"+"</td><td>"+"Actual Percent"+"</td><td>"+"Report Input"+"</td></th>")
-                $('#showGraph').append("<p>Thank you for helping our experiments</p>")
-                        .append("<p> The response you put for bar chart [" + Result.totalInput_bar + "]</p>")
-                        .append("<p> The actual result for bar chart [" + Result.realResult_bar +"]</p>")
-                        .append("<p> The response you put for bubble chart [" + Result.totalInput_bubble + "]</p>")
-                        .append("<p> The actual result for bubble chart [" + Result.realResult_bubble +"]</p>")
-                        .append("<p> The response you put for tree map [" + Result.totalInput_tree + "]</p>")
-                        .append("<p> The actual result for tree map [" + Result.realResult_tree +"]</p>")
-                        .append("<p> The actual result for tree map [" + userName +"]</p>");
+                $('#showGraph').append("<table></table><th><td>"+ "UserId"+"</td><td>" + "Trial Number"+"</td><td>"+"Visual Type"+"</td><td>"+"Actual Percent"+"</td><td>"+"Report Input"+"</td></th>");
+                for (var trial in final_res) {
+                    $('#showGraph').append("<table></table><th><td>"+ trial.userName+"</td><td>" + trial.Trial_Number+"</td><td>"+trial.Vis+"</td><td>"+trial.Act+"</td><td>"+trial.reportPercent+"</td></th>");
+                }
+                $('#showGraph').append("</table>");
                 $('#showInstruction').empty();
 
 
@@ -295,7 +287,10 @@
             $('#inputValue').val('');
             $('#inputValue').focus();
         }
-
+        function getUserName(){
+            console.log("went here");
+            userName = $("#name").val();
+        }
         function remove(){
             $('#showGraph').empty();
         }
@@ -307,18 +302,15 @@
                     .append("<input id = 'inputValue' autofocus>")
                     .append("<button id='next' onclick='judgeTimes(); handleChange()'>Next</button>")
         }
-        function getUserName(){
-            userName = $("#name").val();
 
-        }
 
     </script>
 </head>
 <body>
     <div id ="showGraph">
         <p>The experiment contains 12 questions to answer. It will spend about 3 minutes to finished. Please type in your name and start!</p>
-        Name: <input id = "name">
-        <button id = "firstCommit" onclick = "getUserName();remove();addInstruction(); judgeTimes()">START</button>
+        <input id = "name">
+        <button id = "firstCommit" onclick = "getUserName(); remove();addInstruction(); judgeTimes()">START</button>
     </div>
     <div id = "showInstruction"></div>
 
