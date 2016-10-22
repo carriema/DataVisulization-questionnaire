@@ -68,6 +68,7 @@
         var name = "";
         var Result = {};
         trials = 0;
+        var userName = "";
         Result.totalInput_bar =[];
         Result.realResult_bar =[];
         Result.totalInput_bubble =[];
@@ -102,20 +103,17 @@
                         .append("<p> The response you put for bubble chart [" + Result.totalInput_bubble + "]</p>")
                         .append("<p> The actual result for bubble chart [" + Result.realResult_bubble +"]</p>")
                         .append("<p> The response you put for tree map [" + Result.totalInput_tree + "]</p>")
-                        .append("<p> The actual result for tree map [" + Result.realResult_tree +"]</p>");
+                        .append("<p> The actual result for tree map [" + Result.realResult_tree +"]</p>")
+                        .append("<p> The actual result for tree map [" + userName +"]</p>");
                 $('#showInstruction').empty();
-                var mailContent =  "The response you put for bar chart [" + Result.totalInput_bar + "]" + "<p> The actual result for bar chart [" + Result.realResult_bar +"]</p>"
-                +"<p> The response you put for bubble chart [" + Result.totalInput_bubble + "]</p>"+"<p> The actual result for bubble chart [" + Result.realResult_bubble +"]</p>"+
-                        "<p> The response you put for tree map [" + Result.totalInput_tree + "]</p>" +  "<p> The actual result for tree map [" + Result.realResult_tree +"]</p>";
-                var mail="mailto:carriema1013@gmail.com?subject='Test Experiment' &body="+ mailContent;
 
-                $(this).attr('href', mail)
 
             }
             else {
                 random();
             }
         }
+        
 
         function random() {
             var data = [];
@@ -293,13 +291,17 @@
                     .append("<input id = 'inputValue' autofocus>")
                     .append("<button id='next' onclick='judgeTimes(); handleChange()'>Next</button>")
         }
+        function gerUserName(){
+            userName = $(".name").val();
+        }
 
     </script>
 </head>
 <body>
     <div id ="showGraph">
-        <p>The experiment contains 12 questions to answer. It will spend about 3 minutes to finished. Ready?</p>
-        <button id = "firstCommit" onclick = "remove();addInstruction(); judgeTimes()">START</button>
+        <p>The experiment contains 12 questions to answer. It will spend about 3 minutes to finished. Please Type in your name and start!</p>
+        <input id = "name">
+        <button id = "firstCommit" onclick = "gerUserName();remove();addInstruction(); judgeTimes()">START</button>
     </div>
     <div id = "showInstruction"></div>
 
